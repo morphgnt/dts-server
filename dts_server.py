@@ -12,12 +12,12 @@ NAVIGATION_PATH = f"{BASE_PATH}navigation/"
 
 
 BASE_API_ENDPOINT = {
-  "@context": f"{BASE_PATH}contexts/EntryPoint.jsonld",
-  "@id": BASE_PATH,
-  "@type": "EntryPoint",
-  "collections": COLLECTIONS_PATH,
-  "documents": DOCUMENTS_PATH,
-  "navigation" : NAVIGATION_PATH,
+    "@context": f"{BASE_PATH}contexts/EntryPoint.jsonld",
+    "@id": BASE_PATH,
+    "@type": "EntryPoint",
+    "collections": COLLECTIONS_PATH,
+    "documents": DOCUMENTS_PATH,
+    "navigation" : NAVIGATION_PATH,
 }
 
 @app.route(BASE_PATH)
@@ -28,10 +28,10 @@ def base_api_endpoint():
 
 COLLECTIONS = [
     {
-         "@id" : "@@@",
-         "title" : "SBL Greek New Testament",
-         "@type" : "Collection",
-         "totalItems" : 27,
+        "@id" : "@@@",
+        "title" : "SBL Greek New Testament",
+        "@type" : "Collection",
+        "totalItems" : 27,
     },
 ]
 
