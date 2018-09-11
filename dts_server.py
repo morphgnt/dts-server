@@ -24,3 +24,32 @@ BASE_API_ENDPOINT = {
 def base_api_endpoint():
     # @@@ actually needs to return with content type of "application/ld+json"
     return jsonify(BASE_API_ENDPOINT)
+
+
+COLLECTIONS = [
+    {
+         "@id" : "@@@",
+         "title" : "SBL Greek New Testament",
+         "@type" : "Collection",
+         "totalItems" : 27,
+    },
+]
+
+COLLECTIONS_ENDPOINT = {
+    "@context": {
+        "@vocab": "https://www.w3.org/ns/hydra/core#",
+        "dc": "http://purl.org/dc/terms/",
+        "dts": "https://w3id.org/dts/api#"
+    },
+    "@id": COLLECTIONS_PATH,
+    "@type": "Collection",
+    "totalItems": len(COLLECTIONS),
+    "title": "MorphGNT DTS Server Collection",
+    "member": COLLECTIONS,
+}
+
+
+@app.route(COLLECTIONS_PATH)
+def collections_endpoint():
+    # @@@ actually needs to return with content type of "application/ld+json"
+    return jsonify(COLLECTIONS_ENDPOINT)
