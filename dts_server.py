@@ -28,7 +28,7 @@ def base_api_endpoint():
 
 COLLECTIONS = [
     {
-        "@id" : "@@@",
+        "@id" : "SBLGNT",
         "title" : "SBL Greek New Testament",
         "@type" : "Collection",
         "totalItems" : 27,
