@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 
 app = Flask(__name__)
@@ -26,30 +26,42 @@ def base_api_endpoint():
     return jsonify(BASE_API_ENDPOINT)
 
 
-COLLECTIONS = [
-    {
-        "@id" : "SBLGNT",
-        "title" : "SBL Greek New Testament",
-        "@type" : "Collection",
-        "totalItems" : 27,
-    },
-]
-
-COLLECTIONS_ENDPOINT = {
+COLLECTION_BASE = {
     "@context": {
         "@vocab": "https://www.w3.org/ns/hydra/core#",
         "dc": "http://purl.org/dc/terms/",
         "dts": "https://w3id.org/dts/api#"
     },
-    "@id": COLLECTIONS_PATH,
-    "@type": "Collection",
-    "totalItems": len(COLLECTIONS),
-    "title": "MorphGNT DTS Server Collection",
-    "member": COLLECTIONS,
+    "@type" : "Collection",
 }
 
+SBLGNT_COLLECTION = {
+    **COLLECTION_BASE,
+    "@id" : "SBLGNT",
+    "title" : "SBL Greek New Testament",
+    "totalItems" : 27,
+}
+
+MORPHGNT_DTS_SERVER_COLLECTIONS = [SBLGNT_COLLECTION]
+
+ROOT_COLLECTION = {
+    **COLLECTION_BASE,
+    "@id": "root",
+    "title": "MorphGNT DTS Server Collection",
+    "totalItems": len(MORPHGNT_DTS_SERVER_COLLECTIONS),
+    "member": MORPHGNT_DTS_SERVER_COLLECTIONS,
+}
+
+COLLECTIONS = {
+    c["@id"]: c for c in [
+        ROOT_COLLECTION,
+        SBLGNT_COLLECTION,
+    ]
+}
 
 @app.route(COLLECTIONS_PATH)
 def collections_endpoint():
     # @@@ actually needs to return with content type of "application/ld+json"
-    return jsonify(COLLECTIONS_ENDPOINT)
+    collection_id = request.args.get("id", ROOT_COLLECTION["@id"])
+    collection = COLLECTIONS[collection_id]
+    return jsonify(collection)
