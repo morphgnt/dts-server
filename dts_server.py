@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from json import dumps
 
+from flask import Flask, request, Response
 
 app = Flask(__name__)
 
@@ -22,8 +23,7 @@ BASE_API_ENDPOINT = {
 
 @app.route(BASE_PATH)
 def base_api_endpoint():
-    # @@@ actually needs to return with content type of "application/ld+json"
-    return jsonify(BASE_API_ENDPOINT)
+    return Response(dumps(BASE_API_ENDPOINT), mimetype="application/ld+json")
 
 
 COLLECTION_BASE = {
@@ -61,7 +61,15 @@ COLLECTIONS = {
 
 @app.route(COLLECTIONS_PATH)
 def collections_endpoint():
-    # @@@ actually needs to return with content type of "application/ld+json"
     collection_id = request.args.get("id", ROOT_COLLECTION["@id"])
-    collection = COLLECTIONS[collection_id]
-    return jsonify(collection)
+    try:
+        collection = COLLECTIONS[collection_id]
+        response = Response(dumps(collection), mimetype="application/ld+json")
+    except KeyError:
+        response = Response(dumps({
+            "@context": "http://www.w3.org/ns/hydra/context.jsonld",
+            "@type": "Error",
+            "title": "Unknown collection",
+            "description": f"No collection with @id = '{collection_id}'",
+        }), status=404, mimetype="application/ld+json")
+    return response
